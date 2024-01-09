@@ -4,7 +4,6 @@ const usersRouter = require("./users");
 const { NOT_FOUND_ERROR } = require("../utils/errors");
 
 router.use("/items", clothingItems);
-//Is it item or items?
 router.use("/users", usersRouter);
 
 router.use((req, res) => {

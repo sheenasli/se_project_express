@@ -9,9 +9,9 @@ const {
 
 const createItem = (req, res) => {
   console.log(req.user._id);
-  const { name, weather, imageURL } = req.body;
+  const { name, weather, imageUrl } = req.body;
 
-  ClothingItem.create({ name, weather, imageURL, owner: req.user._id })
+  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
       console.log(item);
       res.send({ data: item });
@@ -48,9 +48,9 @@ const getItems = (req, res) => {
 
 const updateItem = (req, res) => {
   const { itemId } = req.params;
-  const { imageURL } = req.body;
+  const { imageUrl } = req.body;
 
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageURL } })
+  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((e) => {
@@ -64,32 +64,30 @@ const deleteItem = (req, res) => {
   const userId = req.user._id;
   console.log(itemId);
 
-  ClothingItem.findById(itemId)
+  ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => {
-      if (!item.owner.equals(userId)) {
-        return Promise.reject(new Error("Unauthorized To Delete Item"));
-      }
-      return ClothingItem.findByIdAndDelete(itemId).then(() => {
-        res.status(200).send({ message: `Item ${itemId} Deleted` });
-      });
-    })
+    .then((item) =>
+      // if (!item.owner.equals(userId)) {
+      //   return Promise.reject(new Error("Unauthorized To Delete Item"));
+      // }
+      // return ClothingItem.findByIdAndDelete(itemId).then(() => {
+      res.status(200).send({ message: `Item ${itemId} Deleted` }),
+    )
+    // })
     // res.status(REQUEST_SUCCESSFUL).send({ item }))
     .catch((err) => {
       console.error(err);
-      if (err.message === "Unauthorized To Delete Item") {
-        return res
+      if (err.name === `CastError`) {
+        res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Unauthorized To Delete Item" });
-      }
-      if (err.name === `DocumentNotFoundError`) {
-        return res
+      } else if (err.name === `DocumentNotFoundError`) {
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: `${err.name} Error On Deleting Item` });
+      } else {
+        res.status(DEFAULT_ERROR).send({ message: "deleteItem Failed" });
       }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error" });
     });
 };
 
@@ -112,15 +110,13 @@ const likeItem = (req, res) => {
         return res
           .status(NOT_FOUND_ERROR)
           .send({ message: `${err.name} Error On likeItem` });
-      }
-      if (err.name === `CastError`) {
+      } else if (err.name === `CastError`) {
         return res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid Credentials, Unable To Add Like" });
+      } else {
+        res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
       }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error" });
     });
   // res
   //   .status(INVALID_DATA_ERROR)
@@ -138,22 +134,20 @@ const dislikeItem = (req, res) => {
     { new: true },
   )
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === `DocumentNotFoundError`) {
-        return res
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: `${err.name} Error On dislikeItem` });
-      }
-      if (err.name === `CastError`) {
-        return res
+      } else if (err.name === `CastError`) {
+        res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid Credentials, Unable To Remove Like" });
+      } else {
+        res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
       }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error" });
     });
 };
 
