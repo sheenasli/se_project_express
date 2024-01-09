@@ -13,13 +13,17 @@ const createUser = (req, res) => {
   User.create({ name, avatar })
     .then((user) => {
       console.log(user);
-      res.send({ user });
+      res.send(user);
     })
-    .catch((e) => {
-      console.error(e);
-      res
-        .status(INVALID_DATA_ERROR)
-        .send({ message: "Creating User Failed", e });
+    .catch((err) => {
+      console.error(err);
+      if (err.name === `ValidationError`) {
+        res
+          .status(INVALID_DATA_ERROR)
+          .send({ message: "Invalid Request Error On createUser" });
+      } else {
+        res.status(DEFAULT_ERROR).send({ message: "Error From createUser" });
+      }
     });
 };
 
@@ -28,18 +32,16 @@ const getUser = (req, res) => {
 
   User.findById(userId)
     .orFail()
-    .then((user) => {
-      if (!user) {
-        return res
-          .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid Credentials", e });
+    .then((user) => res.status(200).send({ data: user }))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        res.status(NOT_FOUND_ERROR).send({ message: err.message });
+      } else if (err.name === "CastError") {
+        res.status(INVALID_DATA_ERROR).send({ message: "Invalid ID passed" });
+      } else {
+        res.status(DEFAULT_ERROR).send({ message: "Error from getUser" });
       }
-
-      res.status(REQUEST_SUCCESSFUL).send(user);
-    })
-    .catch((e) => {
-      console.error(e);
-      res.status(NOT_FOUND_ERROR).send({ message: "User Not Found", e });
     });
 };
 
@@ -47,8 +49,8 @@ const getUsers = (req, res) => {
   User.find({})
     .orFail()
     .then((users) => res.status(200).send(users))
-    .catch((e) => {
-      console.error(e);
+    .catch((err) => {
+      console.error(err);
       res.status(DEFAULT_ERROR).send({ message: "Internal Server Error", e });
     });
 };

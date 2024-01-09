@@ -16,16 +16,16 @@ const createItem = (req, res) => {
       console.log(item);
       res.send({ data: item });
     })
-    .catch((e) => {
-      console.error(e);
-      if (e.name === `ValidationError`) {
+    .catch((err) => {
+      console.error(err);
+      if (err.name === `ValidationError`) {
         return res
           .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid Credentials", e });
+          .send({ message: "Invalid Credentials" });
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error", e });
+        .send({ message: "Internal Server Error" });
       // res
       //   .status(INVALID_DATA_ERROR)
       //   .send({ message: "Invalid Credentials", e });
@@ -75,9 +75,9 @@ const deleteItem = (req, res) => {
       });
     })
     // res.status(REQUEST_SUCCESSFUL).send({ item }))
-    .catch((e) => {
-      console.error(e);
-      if (e.message === "Unauthorized To Delete Item") {
+    .catch((err) => {
+      console.error(err);
+      if (err.message === "Unauthorized To Delete Item") {
         return res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Unauthorized To Delete Item" });
@@ -89,7 +89,7 @@ const deleteItem = (req, res) => {
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error", e });
+        .send({ message: "Internal Server Error" });
     });
 };
 
@@ -116,11 +116,11 @@ const likeItem = (req, res) => {
       if (err.name === `CastError`) {
         return res
           .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid Credentials, Unable To Add Like", e });
+          .send({ message: "Invalid Credentials, Unable To Add Like" });
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error", e });
+        .send({ message: "Internal Server Error" });
     });
   // res
   //   .status(INVALID_DATA_ERROR)
@@ -149,11 +149,11 @@ const dislikeItem = (req, res) => {
       if (err.name === `CastError`) {
         return res
           .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid Credentials, Unable To Remove Like", e });
+          .send({ message: "Invalid Credentials, Unable To Remove Like" });
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: "Internal Server Error", e });
+        .send({ message: "Internal Server Error" });
     });
 };
 
