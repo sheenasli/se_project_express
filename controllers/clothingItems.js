@@ -53,8 +53,8 @@ const updateItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
-    .catch((e) => {
-      console.error(e);
+    .catch((err) => {
+      console.error(err);
       res.status(DEFAULT_ERROR).send({ message: "Internal Server Error", e });
     });
 };
@@ -134,10 +134,10 @@ const dislikeItem = (req, res) => {
     { new: true },
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => res.status(200).send({ data: item }))
     .catch((err) => {
       console.error(err);
-      if (err.name === `DocumentNotFoundError`) {
+      if (err.name === "DocumentNotFoundError") {
         res
           .status(NOT_FOUND_ERROR)
           .send({ message: `${err.name} Error On dislikeItem` });
