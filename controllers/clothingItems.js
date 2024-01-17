@@ -1,4 +1,3 @@
-// const { reset } = require("nodemon");
 const ClothingItem = require("../models/clothingItem");
 const {
   REQUEST_SUCCESSFUL,
@@ -26,15 +25,8 @@ const createItem = (req, res) => {
       return res
         .status(DEFAULT_ERROR)
         .send({ message: "Internal Server Error" });
-      // res
-      //   .status(INVALID_DATA_ERROR)
-      //   .send({ message: "Invalid Credentials", e });
     });
 };
-
-// module.exports.createClothingItem = (req, res) => {
-//   console.log(req.user._id);
-// };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -47,20 +39,11 @@ const getItems = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  // const userId = req.user._id;
   console.log(itemId);
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then(() =>
-      // if (!item.owner.equals(userId)) {
-      //   return Promise.reject(new Error("Unauthorized To Delete Item"));
-      // }
-      // return ClothingItem.findByIdAndDelete(itemId).then(() => {
-      res.send({ message: `Item ${itemId} Deleted` }),
-    )
-    // })
-    // res.status(REQUEST_SUCCESSFUL).send({ item }))
+    .then(() => res.send({ message: `Item ${itemId} Deleted` }))
     .catch((err) => {
       console.error(err);
       if (err.name === `CastError`) {
@@ -104,9 +87,6 @@ const likeItem = (req, res) => {
         res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
       }
     });
-  // res
-  //   .status(INVALID_DATA_ERROR)
-  //   .send({ message: "Invalid Credentials, Unable To Add Like", e });
 };
 
 const dislikeItem = (req, res) => {
@@ -140,7 +120,6 @@ const dislikeItem = (req, res) => {
 module.exports = {
   createItem,
   getItems,
-  updateItem,
   deleteItem,
   likeItem,
   dislikeItem,
