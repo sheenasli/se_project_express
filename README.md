@@ -1,9 +1,39 @@
-# WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
-## Running the Project
-`npm run start` — to launch the server 
+# WTWR (What to Wear?) : Back End
 
-`npm run dev` — to launch the server with the hot reload feature
+## Overview
 
-### Testing
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+- About the project
+- Features
+- Technologies used
+- Links
+- Images of Requests and Demo Server
+
+## About the project
+
+The project is the backend of the WTWR project. Routes and Controllers are used to fetch, create, and delete items on the front end. In this project, security and testing is set up to authorizes and store user data safely in the remote server.
+
+## Features
+
+- Database created and connected to remote server
+- Configured routes and controllers for desired API connection
+- Error Handling
+- Validations for URL fields
+- Implemented authorization solution
+
+## Technologies Used
+
+- Node.js
+- Express framework
+- MongoDB database
+- Mongoose ODM
+- Postman
+
+## Links
+
+- The project is hosted on GitHub Pages and can be seen live using the this [https://sheenasli.github.io/se_project_react]
+- The project's backend can be found by using this [https://github.com/sheenasli/se_project_react]
+
+## Images of Requests and Demo Server
+
+<img align="center" src="./Images/Postman.png" alt="Postman image">
+<img align="center" src="./Images/MongoDB.png" alt="MongoDb image">

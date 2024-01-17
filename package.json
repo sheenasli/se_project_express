@@ -21,6 +21,7 @@
   "homepage": "https://github.com/sheenasli/se_project_express#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "helmet": "^7.1.0",
     "mongoose": "^6.6.1",
     "validator": "^13.11.0"
   },

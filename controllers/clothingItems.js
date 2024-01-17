@@ -1,4 +1,4 @@
-const { reset } = require("nodemon");
+// const { reset } = require("nodemon");
 const ClothingItem = require("../models/clothingItem");
 const {
   REQUEST_SUCCESSFUL,
@@ -38,40 +38,26 @@ const createItem = (req, res) => {
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .orFail()
     .then((items) => res.status(200).send(items))
     .catch((e) => {
       console.error(e);
-      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error", e });
-    });
-};
-
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
-
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
-    .orFail()
-    .then((item) => res.status(200).send({ data: item }))
-    .catch((err) => {
-      console.error(err);
-      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error", e });
+      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
     });
 };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  const userId = req.user._id;
+  // const userId = req.user._id;
   console.log(itemId);
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) =>
+    .then(() =>
       // if (!item.owner.equals(userId)) {
       //   return Promise.reject(new Error("Unauthorized To Delete Item"));
       // }
       // return ClothingItem.findByIdAndDelete(itemId).then(() => {
-      res.status(200).send({ message: `Item ${itemId} Deleted` }),
+      res.send({ message: `Item ${itemId} Deleted` }),
     )
     // })
     // res.status(REQUEST_SUCCESSFUL).send({ item }))
@@ -91,7 +77,7 @@ const deleteItem = (req, res) => {
     });
 };
 
-//Likes/Unlikes
+// Likes/Unlikes
 const likeItem = (req, res) => {
   console.log(req.user._id);
   const userId = req.user._id;
@@ -107,11 +93,11 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === `DocumentNotFoundError`) {
-        return res
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: `${err.name} Error On likeItem` });
       } else if (err.name === `CastError`) {
-        return res
+        res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid Credentials, Unable To Add Like" });
       } else {

@@ -1,7 +1,6 @@
-const { reset } = require("nodemon");
+// const { reset } = require("nodemon");
 const User = require("../models/user");
 const {
-  REQUEST_SUCCESSFUL,
   INVALID_DATA_ERROR,
   NOT_FOUND_ERROR,
   DEFAULT_ERROR,
@@ -28,7 +27,7 @@ const createUser = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
 
   User.findById(userId)
     .orFail()
@@ -47,11 +46,10 @@ const getUser = (req, res) => {
 
 const getUsers = (req, res) => {
   User.find({})
-    .orFail()
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error", e });
+      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
     });
 };
 
