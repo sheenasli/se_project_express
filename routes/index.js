@@ -6,6 +6,9 @@ const { NOT_FOUND_ERROR } = require("../utils/errors");
 router.use("/items", clothingItems);
 router.use("/users", usersRouter);
 
+router.post("/signin", login);
+router.post("/signup", createUser);
+
 router.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: "Router not found" });
 });

@@ -15,10 +15,11 @@ The project is the backend of the WTWR project. Routes and Controllers are used 
 ## Features
 
 - Database created and connected to remote server
-- Configured routes and controllers for desired API connection
+- Configured routes and controllers for desired API connection, Sign Up/In, & modifying current user data
 - Error Handling
 - Validations for URL fields
 - Implemented authorization solution
+- Security for existing routes
 
 ## Technologies Used
 
