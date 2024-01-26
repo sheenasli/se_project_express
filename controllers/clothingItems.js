@@ -41,7 +41,7 @@ const getItems = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
   console.log(itemId);
-  const { _id: usesrID } = req.user;
+  const { _id: userId } = req.user;
 
   ClothingItem.findOne({ _id: itemId })
     .then((item) => {
@@ -51,11 +51,9 @@ const deleteItem = (req, res) => {
       if (!item?.owner?.equals(userId)) {
         return Promise.reject(new Error("You are not the owner of this item"));
       }
-      return ClothingItem.deleteOne({ _id: itemId, owner: usesrID }).then(
-        () => {
-          res.send({ message: `Item ${itemId} Deleted` });
-        },
-      );
+      return ClothingItem.deleteOne({ _id: itemId, owner: userId }).then(() => {
+        res.send({ message: `Item ${itemId} Deleted` });
+      });
     })
     .catch((err) => {
       console.error(err);
