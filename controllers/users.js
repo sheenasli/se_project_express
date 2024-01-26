@@ -98,15 +98,6 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      console.error(err);
-      res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
-    });
-};
-
 const updateUser = (req, res) => {
   const id = req.user._id;
   const { name, avatar } = req.body;
