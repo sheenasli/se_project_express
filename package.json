@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "deploy": "npm run build && scp -r ./build/* sheenu.sli@wtwr.switchestudio.com:/home/sheenu.sli/frontend"
   },
   "repository": {
     "type": "git",
