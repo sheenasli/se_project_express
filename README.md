@@ -31,7 +31,7 @@ The project is the backend of the WTWR project. Routes and Controllers are used 
 
 ## Links
 
-- The project is hosted on GitHub Pages and can be seen live using the this [https://sheenasli.github.io/se_project_react]
+- The project can be seen live using the this [https://wtwr.switchestudio.com]
 - The project's backend can be found by using this [https://github.com/sheenasli/se_project_react]
 
 ## Images of Requests and Demo Server
