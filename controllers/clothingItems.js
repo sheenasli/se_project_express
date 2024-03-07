@@ -38,10 +38,10 @@ const deleteItem = (req, res, next) => {
   ClothingItem.findOne({ _id: itemId })
     .then((item) => {
       if (!item) {
-        next(new NotFoundError("Item ID cannot be found"));
+        return next(new NotFoundError("Item ID cannot be found"));
       }
       if (!item?.owner?.equals(userId)) {
-        next(new ForbiddenError("You are not the owner of this item"));
+        return next(new ForbiddenError("You are not the owner of this item"));
       }
       return ClothingItem.deleteOne({ _id: itemId, owner: userId }).then(() => {
         res.send({ message: `Item ${itemId} Deleted` });

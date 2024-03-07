@@ -15,7 +15,7 @@ const createUser = (req, res, next) => {
     .then((user) => {
       if (!email) {
         // throw new Error("Enter a valid email");
-        return next(new UnauthorizedError("Enter a valid email"));
+        return next(new InvalidError("Enter a valid email"));
       }
       if (user) {
         // throw new Error("Email is already in use");
@@ -50,8 +50,7 @@ const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(InvalidError).send({ message: "Invalid Credentials" });
-    return;
+    return next(new InvalidError("Invalid Credentials"));
   }
 
   User.findUserByCredentials(email, password)
@@ -78,7 +77,7 @@ const getCurrentUser = (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError("User not found"));
+        return next(new NotFoundError("User not found"));
       }
       return res.send({ data: user });
     })
@@ -99,7 +98,7 @@ const updateUser = (req, res, next) => {
     .orFail()
     .then((user) => {
       if (!user) {
-        next(new NotFoundError("User not found"));
+        return next(new NotFoundError("User not found"));
       }
       return res.send({ data: user });
     })
