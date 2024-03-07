@@ -1,18 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-  REQUEST_SUCCESSFUL,
-  FORBIDDEN_ERROR,
-  INVALID_DATA_ERROR,
-  NOT_FOUND_ERROR,
-  DEFAULT_ERROR,
-} = require("../utils/errors");
-//May not need above
-const invalidError = require("../errors/invalidError");
-const notFoundError = require("../errors/notFound");
-const conflictError = require("../errors/conflictError");
-const defaultError = require("../errors/defaultError");
-const unauthorizedError = require("../errors/unauthorizedError");
-const forbiddenError = require("../errors/forbiddenError");
+const InvalidError = require("../errors/InvalidError");
+const NotFoundError = require("../errors/NotFound");
+const ForbiddenError = require("../errors/ForbiddenError");
 
 const createItem = (req, res, next) => {
   console.log(req.user._id);
@@ -26,14 +15,8 @@ const createItem = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === `ValidationError`) {
-        // return res
-        //   .status(INVALID_DATA_ERROR)
-        //   .send({ message: "Invalid Credentials" });
-        next(new invalidError("Invalid Credentials"));
+        next(new InvalidError("Invalid Credentials"));
       }
-      // return res
-      //   .status(DEFAULT_ERROR)
-      //   .send({ message: "Internal Server Error" });
       next(err);
     });
 };
@@ -43,7 +26,6 @@ const getItems = (req, res, next) => {
     .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
-      // res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
       next(err);
     });
 };
@@ -56,12 +38,10 @@ const deleteItem = (req, res, next) => {
   ClothingItem.findOne({ _id: itemId })
     .then((item) => {
       if (!item) {
-        // return Promise.reject(new Error("ID cannot be found"));
-        next(new notFoundError("Item ID cannot be found"));
+        next(new NotFoundError("Item ID cannot be found"));
       }
       if (!item?.owner?.equals(userId)) {
-        // return Promise.reject(new Error("You are not the owner of this item"));
-        next(new forbiddenError("You are not the owner of this item"));
+        next(new ForbiddenError("You are not the owner of this item"));
       }
       return ClothingItem.deleteOne({ _id: itemId, owner: userId }).then(() => {
         res.send({ message: `Item ${itemId} Deleted` });
@@ -89,15 +69,10 @@ const likeItem = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === `DocumentNotFoundError`) {
-        // res
-        //   .status(NOT_FOUND_ERROR)
-        //   .send({ message: `${err.name} Error On likeItem` });
+        next(new NotFoundError(`${err.name} Error On likeItem`));
       } else if (err.name === `CastError`) {
-        // res
-        //   .status(INVALID_DATA_ERROR)
-        //   .send({ message: "Invalid Credentials, Unable To Add Like" });
+        next(new InvalidError("Invalid Credentials, Unable To Remove Like"));
       } else {
-        // res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
         next(err);
       }
     });
@@ -118,17 +93,10 @@ const dislikeItem = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        // res
-        //   .status(NOT_FOUND_ERROR)
-        //   .send({ message: `${err.name} Error On dislikeItem` });
-        next(new notFoundError(`${err.name} Error On dislikeItem`));
+        next(new NotFoundError(`${err.name} Error On dislikeItem`));
       } else if (err.name === `CastError`) {
-        // res
-        //   .status(INVALID_DATA_ERROR)
-        //   .send({ message: "Invalid Credentials, Unable To Remove Like" });
-        next(new invalidError("Invalid Credentials, Unable To Remove Like"));
+        next(new InvalidError("Invalid Credentials, Unable To Remove Like"));
       } else {
-        // res.status(DEFAULT_ERROR).send({ message: "Internal Server Error" });
         next(err);
       }
     });
